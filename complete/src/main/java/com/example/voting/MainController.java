@@ -48,21 +48,26 @@ public class MainController {
 		this.restTemplate = restTemplateBuilder.build();
 	}
 
-	public static void main(String[] args) {
-		SpringApplication.run(MainController.class, args);
-	}
-	
-	@GetMapping(path = "/heroes/favourites")
-	public @ResponseBody Quote getAllUsers() {
+	// public static void main(String[] args) {
+	// 	SpringApplication.run(MainController.class, args);
+		
+	@GetMapping(path = "/heroes/stories")
+	public @ResponseBody Quote getHeroesStories(@RequestParam Integer characterId) {
+		//String characterId = "1009220";
 		// This returns a JSON or XML with the users
 		//return userRepository.findAll();
 		//SpringApplication.run(MainController.class);
 
 		//return this.restTemplate.getForObject("/{name}/details", Details.class, name);
 		//return this.restTemplate.getForObject("http://gateway.marvel.com/v1/public/comics?ts=1570805269&apikey=270ff4d25823b87e94d50bcc9f197996&hash=f0bff4e5f6dbfce6286cb36a986e6527", Quote.class);
-		return this.restTemplate.getForObject("http://gateway.marvel.com/v1/public/characters/1009368/comics?limit=5&ts=1570805269&apikey=270ff4d25823b87e94d50bcc9f197996&hash=f0bff4e5f6dbfce6286cb36a986e6527", Quote.class);
+		//return this.restTemplate.getForObject("http://gateway.marvel.com/v1/public/characters/1009368/comics?limit=5&ts=1570805269&apikey=270ff4d25823b87e94d50bcc9f197996&hash=f0bff4e5f6dbfce6286cb36a986e6527", Quote.class);
+		return this.restTemplate.getForObject("http://gateway.marvel.com/v1/public/characters/{characterId}/stories?limit=5&ts=1570805269&apikey=270ff4d25823b87e94d50bcc9f197996&hash=f0bff4e5f6dbfce6286cb36a986e6527", Quote.class, characterId);
 		/*"id": 1009368,
-                "name": "Iron Man",*/
+				"name": "Iron Man",
+			"id": 1009189,
+				"name": "Black Widow",
+			"id": 1009220,
+                "name": "Captain America",*/
 
 		//return "Heróios";
 	}
