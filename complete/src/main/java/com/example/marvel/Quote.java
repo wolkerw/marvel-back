@@ -1,4 +1,4 @@
-package com.example.voting;
+package com.example.marvel;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
