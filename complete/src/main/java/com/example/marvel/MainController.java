@@ -1,33 +1,18 @@
 package com.example.marvel;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.xml.bind.DatatypeConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
@@ -46,7 +31,7 @@ public class MainController {
 	@Autowired
 	private MarvelRepository marvelRepository;
 	/*
-	 * @Autowired private VoteRepository voteRepository;
+	 * @Autowired private MarvelRepository marvelRepository;
 	 */
 
 	private final RestTemplate restTemplate;
@@ -57,9 +42,6 @@ public class MainController {
 	public MainController(RestTemplateBuilder restTemplateBuilder) {
 		this.restTemplate = restTemplateBuilder.build();
 	}
-
-	// public static void main(String[] args) {
-	// SpringApplication.run(MainController.class, args);
 
 	@GetMapping(path = "/heroes/stories")
 	public @ResponseBody Quote getHeroesStories(@RequestParam Integer characterId) {
@@ -85,7 +67,6 @@ public class MainController {
         for (byte b : hashInBytes) {
             sb.append(String.format("%02x", b));
         }
-        //System.out.println(sb.toString());
 
 		Map<String, String> vars = new HashMap<>();
 		vars.put("characterId", characterId.toString());
@@ -120,7 +101,6 @@ public class MainController {
         for (byte b : hashInBytes) {
             sb.append(String.format("%02x", b));
         }
-        //System.out.println(sb.toString());
 
 		Map<String, String> vars = new HashMap<>();
 		vars.put("characterName", characterName);
@@ -130,101 +110,4 @@ public class MainController {
 
 		return this.restTemplate.getForObject("https://gateway.marvel.com/v1/public/characters?ts=1570805269&apikey=270ff4d25823b87e94d50bcc9f197996&hash=f0bff4e5f6dbfce6286cb36a986e6527&name={characterName}&limit=1", Quote.class, characterName);
 	}
-	/*@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder) {
-		return builder.build();
-	}
-
-	@Bean
-	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
-		return args -> {
-			Quote quote = restTemplate.getForObject(
-					"https://gturnquist-quoters.cfapps.io/api/random", Quote.class);
-			log.info(quote.toString());
-		};
-	}
-
-	/*@PostMapping(path = "/voting/add") // Map ONLY POST Requests
-	public @ResponseBody String addNewVoting(@RequestParam String name) {
-		// @ResponseBody means the returned String is the response, not a view name
-		// @RequestParam means it is a parameter from the GET or POST request
-
-		Voting v = new Voting();
-		v.setName(name);
-		votingRepository.save(v);
-		return "Saved";
-	}
-
-	@PostMapping(path = "/add") // Map ONLY POST Requests
-	public @ResponseBody String addNewUser(@RequestParam String name, @RequestParam String email) {
-		// @ResponseBody means the returned String is the response, not a view name
-		// @RequestParam means it is a parameter from the GET or POST request
-
-		User n = new User();
-		n.setName(name);
-		n.setEmail(email);
-		userRepository.save(n);
-		return "Saved";
-	}
-
-	@GetMapping(path = "/user/getAll")
-	public @ResponseBody Iterable<User> getAllUsers() {
-		// This returns a JSON or XML with the users
-		return userRepository.findAll();
-	}
-
-	@PostMapping(path = "/login")
-	// public @ResponseBody Iterable<User> getAllUsers() {
-	public @ResponseBody Optional<User> login(@RequestParam Integer userId) {
-		// @ResponseBody means the returned String is the response, not a view name
-		// @RequestParam means it is a parameter from the GET or POST request
-
-		return userRepository.findById(userId);
-	}
-
-	@GetMapping(path="/voting/getAll")
-	public @ResponseBody Iterable<Voting> getAllVotings() {
-		// This returns a JSON or XML with the votings
-		return votingRepository.findAll();
-	}
-
-	@GetMapping(path="/vote/getAll")
-	public @ResponseBody Iterable<Vote> getAllVotes() {
-		// This returns a JSON or XML with the votings
-		return voteRepository.findAll();
-	}
-
-	@GetMapping(path="/vote/getTotalVotesByVoting")
-	public @ResponseBody List<Map<String, String>> getTotalVotesByVoting() {
-		// This returns a JSON or XML with the votings
-		
-		List<Object[]> totalVotesByVoting = voteRepository.getTotalVotesByVoting();
-
-		/*System.out.println("teste1");
-		System.out.println(totalVotesByVoting);*/
-
-		/*return totalVotesByVoting.stream()
-                          .map(arr->{
-                              Map<String,String> map = new HashMap<>();  
-                              map.put("voting_id", String.valueOf(arr[0]));
-                              map.put("voting_name", (String) arr[1]);
-                              map.put("vote_description", (String) arr[2]);
-                              map.put("amount", String.valueOf(arr[3]));
-                              return map; 
-                            })
-                         .collect(Collectors.toList());
-	}
-
-	@PostMapping(path="/vote/add")
-	public @ResponseBody String setVote (@RequestParam Integer userId, @RequestParam Integer votingId, @RequestParam String description) {
-		// @ResponseBody means the returned String is the response, not a view name
-		// @RequestParam means it is a parameter from the GET or POST request
-
-		Vote v = new Vote();
-		v.setUserId(userId);
-		v.setVotingId(votingId);
-		v.setDescription(description);
-		voteRepository.save(v);
-		return "Voted";
-	}*/
 }
